@@ -4,6 +4,6 @@
   "iconUrl": "https://raw.githubusercontent.com/redblacker8/storm‑ext/master/assets/repoIcon.jpg",
   "manifestVersion": 1,
   "pluginLists": [
-    "https://raw.githubusercontent.com/redblacker8/storm‑ext/builds/plugins.json"
+    "https://raw.githubusercontent.com/jeko1107/fix-try/master/builds/plugins.json"
   ]
 }
