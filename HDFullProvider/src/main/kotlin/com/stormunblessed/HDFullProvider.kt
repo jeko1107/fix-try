@@ -69,8 +69,12 @@ class HDFullProvider : MainAPI() {
             val home =
                 doc.select("div.center div.view").amap {
                     val title = it.selectFirst("h5.left a.link")?.attr("title")
-                    val link = it.selectFirst("h5.left a.link")?.attr("href")
-                        ?.replaceFirst("/", "$mainUrl/")
+                        var link = it.selectFirst("h5.left a.link")?.attr("href")
+                            ?.replaceFirst("/", "$mainUrl/")
+                        // Encode spaces in URLs to avoid loading failures
+                        if (link != null) {
+                            link = link.replace(" ", "%20")
+                        }
                     val type = if (link!!.contains("/pelicula")) TvType.Movie else TvType.TvSeries
                     val img =
                         it.selectFirst("div.item a.spec-border-ie img.img-preview")?.attr("src")
@@ -103,8 +107,12 @@ class HDFullProvider : MainAPI() {
         ).document
         return doc.select("div.container div.view").amap {
             val title = it.selectFirst("h5.left a.link")?.attr("title")
-            val link = it.selectFirst("h5.left a.link")?.attr("href")
-                ?.replaceFirst("/", "$mainUrl/")
+                var link = it.selectFirst("h5.left a.link")?.attr("href")
+                    ?.replaceFirst("/", "$mainUrl/")
+                // Encode spaces in URLs to avoid loading failures
+                if (link != null) {
+                    link = link.replace(" ", "%20")
+                }
             val type = if (link!!.contains("/pelicula")) TvType.Movie else TvType.TvSeries
             val img =
                 it.selectFirst("div.item a.spec-border-ie img.img-preview")?.attr("src")
@@ -222,7 +230,9 @@ class HDFullProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val cookies = ensureLoggedIn()
-        val doc = app.get(data, cookies = cookies).document
+        // Encode spaces in the episode URL to avoid request failures
+        val safeUrl = data.replace(" ", "%20")
+        val doc = app.get(safeUrl, cookies = cookies).document
 
         // Try to find var ad = directly in the page
         var hash = doc.select("script").firstOrNull {
@@ -253,9 +263,15 @@ class HDFullProvider : MainAPI() {
                     if (url.isNotEmpty()) {
                         Log.d("qwerty", "loadLinks: $url")
                         loadSourceNameExtractor(it.lang, url, mainUrl, subtitleCallback, callback)
+                    } else {
+                        Log.w("HDFull", "Decoded URL is empty for provider ${it.provider} code ${it.code}")
                     }
                 }
-            } catch (_: Exception) { }
+            } catch (e: Exception) {
+                Log.e("HDFull", "Error decoding hash or loading links: ${e.message}")
+            }
+        } else {
+            Log.w("HDFull", "No hash found for link $data")
         }
         return true
     }
