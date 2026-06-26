@@ -2,8 +2,8 @@
   {
     "name": "HDFull",
     "description": "Provider HDFull (fork con corrección de URLs)",
-    "apkUrl": "https://raw.githubusercontent.com/jeko1107/fix-try/master/builds/HDFullProvider.apk",
-    "iconUrl": "https://raw.githubusercontent.com/redblacker8/storm-ext/master/assets/hdfullIcon.png",
+    "apkUrl": "https://raw.githubusercontent.com/redblacker8/storm-ext/refs/heads/builds/HDFullProvider.apk",
+    "iconUrl": "https://raw.githubusercontent.com/redblacker8/storm-ext/refs/heads/builds/assets/hdfullIcon.png",
     "manifestVersion": 1,
     "versionCode": 1,
     "versionName": "1.0"
